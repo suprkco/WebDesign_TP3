@@ -1,7 +1,5 @@
 <?php
-
    require('../Controller/Util.php');
-   
    
    session_start();
     /*-- Verification si le formulaire d'authenfication a été bien saisie --*/
@@ -15,10 +13,20 @@
         $Utilisateur = $Util->getUtilisateurById($_SESSION["ID_CONNECTED_USER"]);
         $Medecin = new Secretaire();
         $Medecin = $Utilisateur->getMedecin();
-   }
-   
 
-    
+        $Medecins = $Util->getMedecins();
+        $Patients = $Util->getPatients();
+        $Secretaires = $Util->getSecretaires();
+
+        $RendezVous = $Util->getRendezVousAVenir();
+        // Recupere seulement les rendezvous du medecin connecté
+        $RendezVousMedecin = array();
+        foreach ($RendezVous as $RendezVous) {
+            if($RendezVous->getId_Medecin() == $Medecin->getId_Medecin()){
+                array_push($RendezVousMedecin, $RendezVous);
+            }
+        }
+   }
 ?>
 <html>
     <head>
@@ -30,9 +38,8 @@
                     echo $Medecin->getNom_Medecin().' '.$Medecin->getPrenom_Medecin();
                ?>
         </title>
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" />
-        <link rel="stylesheet" href="js/jquery/css/ui-lightness/jquery-ui-1.9.2.custom.css" type="text/css" />
-        <link rel="shortcut icon" href="bootstrap/img/brain_icon_2.ico"/>
+        <?php include './Elements/headImports.php';?>
+        
     </head>
     <body>
         <div class="container">
@@ -56,33 +63,63 @@
                         <!-- Left body -->
                         <div class="Left-body">
                             <div class="Left-body-head">
-                                Liste des rendez-vous à venir 
+                                Liste des vos rendez-vous (à venir)
                             </div>
                             <div class="infos">
                                 
                             </div>
                             <div class="en_bref">
-                                
+                                    <!-- Si il y a des rendez-vous à venir, ils seront affichés dans le tableau ci-dessous.
+                                    Sinon on affiche un message d'erreur. -->
+                                    <?php
+                                        if(count($RendezVousMedecin) == 0){
+                                            echo '<div class="alert alert-error">';
+                                                echo '<center>';
+                                                    echo '<h4 class="alert-heading">Aucun rendez-vous à venir</h4>';
+                                                echo '</center>';
+                                            echo '</div>';
+                                        }
+                                        else{
+                                            $i = 1;
+                                            echo '<table class="table table-striped table-condensed p-3">';
+                                                echo '<thead>';
+                                                    echo '<tr>';
+                                                        echo '<th>Ordre</th>';
+                                                        echo '<th>Date Rendez-Vous</th>';
+                                                        echo '<th>Salle Rendez-Vous</th>';
+                                                        echo '<th>Id Patient</th>';
+                                                        echo '<th>Nom Patient</th>';
+                                                        echo '<th>Prenom Patient</th>';
+                                                        echo '</tr>';
+                                                echo '</thead>';
+                                                echo '<tbody>';
+                                                foreach ($RendezVousMedecin as $rdv){
+                                                    $Patient = new Patient();
+                                                    $id_rendezvous_patient = intval($rdv->getId_Patient());
+                                                    echo '<tr>';
+                                                        echo '<td>'. $i . '</td>';
+                                                        echo '<td>'. $rdv->getDate_Rendez_Vous() . '</td>';
+                                                        echo '<td>'. $rdv->getSalle_Rendez_Vous() . '</td>';
+                                                        echo '<td>'. $rdv->getId_Patient() . '</td>';
+                                                        if (isset($Patients[$id_rendezvous_patient])) {
+                                                            echo '<td>'.$Patients[$id_rendezvous_patient]->getNom_Patient().'</td>';
+                                                            echo '<td>'.$Patients[$id_rendezvous_patient]->getPrenom_Patient().'</td>';
+                                                        } else {
+                                                            echo '<td>Pas définis</td>';
+                                                            echo '<td>Pas définis</td>';
+                                                        }
+                                                    echo '</tr>';
+                                                    $i++;
+                                                }
+                                                echo '</tbody>';
+                                            echo '</table>';
+                                        }
+                                    ?>
                             </div>
                         </div>
 
                         <!-- Right body -->
-                        <div class="Right-body">
-                            <div class="About-us">
-                                <div class="Social-NW-head">
-                                    
-                                </div>
-                                <div class="Social-NW-body">
-                                    <a href="#"><i class="icon-list"></i> Mes consultations</a>
-                                    <br/>
-                                    <a href="#"><i class="icon-user"></i> Mes patients</a>
-                                    <br/>
-                                    <a href="#"><i class="icon-calendar"></i> Mes rendez-vous</a>
-                                    <hr/>
-                                    <a href="../Controller/deconnexion.php"><i class="icon-off"></i> Se déconnecter </a>
-                                </div>
-                            </div>
-                        </div>
+                        <?php include './Elements/medecinNavBar.php';?>
 
                     </div>
 

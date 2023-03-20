@@ -1,10 +1,7 @@
 <?php
-
    require('../Controller/Util.php');
    
-   
    session_start();
-
     /*-- Verification si le formulaire d'authenfication a été bien saisie --*/
    if($_SESSION["acces"]!='y')
    {
@@ -14,26 +11,31 @@
    else{
         $Util = new Util();
         $Utilisateur = $Util->getUtilisateurById($_SESSION["ID_CONNECTED_USER"]);
-        $Secretaire = new Secretaire();
-        $Secretaire = $Utilisateur->getSecretaire();
+        $Medecin = new Secretaire();
+        $Medecin = $Utilisateur->getMedecin();
 
+        $Medecins = $Util->getMedecins();
         $Patients = $Util->getPatients();
+        $Secretaires = $Util->getSecretaires();
+        $RendezVous = $Util->getRendezVousAVenir();
+
+        // recupere seulement les patients qui ont eu un rendez vous avec le medecin connecté
+        $PatientsMedecin = array();
+        
+
    }
-
-   $Secretaires = $Util->getSecretaires();
-
 ?>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-               <?php
-                    echo $Secretaire->getNom_Secretaire().' '.$Secretaire->getPrenom_Secretaire();
-               ?>
+            <?php   
+                echo $Medecin->getNom_Medecin().' '.$Medecin->getPrenom_Medecin();
+            ?>
         </title>
         <?php include './Elements/headImports.php';?>
-
+        
     </head>
     <body>
         <div class="container">
@@ -47,7 +49,9 @@
                         <div class="Horizontal-menu">
                             <center>
                                 <h4>
-                                    <?php echo $Secretaire->getNom_Secretaire().' '.$Secretaire->getPrenom_Secretaire(); ?>
+                                    <?php
+                                        echo $Medecin->getNom_Medecin().' '.$Medecin->getPrenom_Medecin();
+                                ?>
                                 </h4>
                             </center>
                         </div>
@@ -55,7 +59,7 @@
                         <!-- Left body -->
                         <div class="Left-body">
                             <div class="Left-body-head">
-                                informations patients
+                                Mes patients
                             </div>
                             <div class="infos">
                             </div>
@@ -118,7 +122,7 @@
                         </div>
 
                         <!-- Right body widget -->
-                        <?php include './Elements/secretaireNavBar.php';?>
+                        <?php include './Elements/medecinNavBar.php';?>
 
                     </div>
 

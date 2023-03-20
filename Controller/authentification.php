@@ -16,22 +16,9 @@
             $_SESSION["acces"]='y';
             $_SESSION["ID_CONNECTED_USER"] = $Utilisateur->getId_Utilisateur();
             if($Utilisateur->getType_Utilisateur()=="Medecin"){
-                $Medecin = new Medecin();
-                $Medecin = $Utilisateur->getMedecin();
-                
-                $_SESSION["Medecins"] = $Util->getMedecins();
-
                 header("location: ../Vue/medecin_display.php");
             }
             if($Utilisateur->getType_Utilisateur()=="Secretaire"){
-                $Secretaire = new Secretaire();
-                $Secretaire = $Utilisateur->getSecretaire();
-
-                $_SESSION["Medecins"] = $Util->getMedecins();
-                $_SESSION["Secretaires"] = $Util->getSecretaires();
-                $_SESSION["Patients"] = $Util->getPatients();
-                $_SESSION["RendezVous"] = $Util->getRendezVousAVenir();
-
                 header("location: ../Vue/secretaire_display.php");
             }
                        

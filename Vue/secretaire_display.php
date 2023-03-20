@@ -16,12 +16,14 @@
         $Utilisateur = $Util->getUtilisateurById($_SESSION["ID_CONNECTED_USER"]);
         $Secretaire = new Secretaire();
         $Secretaire = $Utilisateur->getSecretaire();
+
+        $Medecins = $Util->getMedecins();
+        $Secretaires = $Util->getSecretaires();
+        $Patients = $Util->getPatients();
+        $RendezVous = $Util->getRendezVousAVenir();
    }
 
-   $Secretaires = $Util->getSecretaires();
-   $Medecins = $Util->getMedecins();
 
-    
 ?>
 <html>
     <head>
@@ -32,9 +34,8 @@
                     echo $Secretaire->getNom_Secretaire().' '.$Secretaire->getPrenom_Secretaire();
                ?>
         </title>
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css" />
-        <link rel="stylesheet" href="js/jquery/css/ui-lightness/jquery-ui-1.9.2.custom.css" type="text/css" />
-        <link rel="shortcut icon" href="bootstrap/img/brain_icon_2.ico"/>
+        <?php include './Elements/headImports.php';?>
+        
     </head>
     <body>
         <div class="container">
@@ -59,49 +60,64 @@
                                 Liste des rendez-vous à venir 
                             </div>
                             <div class="infos">
-                                <?php
-                                    // $RendezVous & $Patients are in $_SESSION
-                                    $RendezVous = $_SESSION["RendezVous"];
-                                    $Patients = $_SESSION["Patients"];
-                                
-                                    if (isset($RendezVous) && isset($Patients)) { 
-                                        try {
-                                            foreach ($RendezVous as $rdv) {
-                                                $id_rendezvous = intval($rdv->getId_Rendez_Vous());
-                                                $id_rendezvous_patient = intval($rdv->getId_Patient());
-                                                $id_rendezvous_medecin = intval($rdv->getId_Medecin());
+                            </div>
+                            <div class="en_bref">
+                                <!-- tables rendez vous à venrir -->
+                                <table class="table table-striped table-condensed p-3">
+                                    <thead>
+                                        <tr>
+                                            <th>Ordre</th>
+                                            <th>Nom</th>
+                                            <th>Prénom</th>
+                                            <th>Date</th>
+                                            <th>Salle</th>
+                                            <th>Médecin</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            if (isset($RendezVous) && isset($Patients)) { 
+                                                try {
+                                                    $i = 1;
+                                                    foreach ($RendezVous as $rdv) {
+                                                        $id_rendezvous = intval($rdv->getId_Rendez_Vous());
+                                                        $id_rendezvous_patient = intval($rdv->getId_Patient());
+                                                        $id_rendezvous_medecin = intval($rdv->getId_Medecin());
 
-                                                echo '<div class="info"><div class="info-head">';
-                                                if (isset($Patients[$id_rendezvous_patient])) {
-                                                    echo '<h5>'.$Patients[$id_rendezvous_patient]->getNom_Patient().' '.$Patients[$id_rendezvous_patient]->getPrenom_Patient().'</h5>';
-                                                } else {
-                                                    echo '<h5>'.$id_rendezvous_patient.'</h5>';
+                                                        echo '<tr>';
+                                                        echo '<td>'.$i.'</td>';
+                                                        if (isset($Patients[$id_rendezvous_patient])) {
+                                                            echo '<td>'.$Patients[$id_rendezvous_patient]->getNom_Patient().'</td>';
+                                                            echo '<td>'.$Patients[$id_rendezvous_patient]->getPrenom_Patient().'</td>';
+                                                        } else {
+                                                            echo '<td>'.$id_rendezvous_patient.'</td>';
+                                                            echo '<td>'.$id_rendezvous_patient.'</td>';
+                                                        }
+                                                        echo '<td>'.$rdv->getDate_Rendez_Vous().'</td>';
+                                                        echo '<td>'.$rdv->getSalle_Rendez_Vous().'</td>';
+                                                        if (isset($Medecins[$id_rendezvous_medecin])) {
+                                                            echo '<td>'.$Medecins[$id_rendezvous_medecin]->getNom_Medecin().' '.$Medecins[$id_rendezvous_medecin]->getPrenom_Medecin().'</td>';
+                                                        } else {
+                                                            echo '<td>'.$id_rendezvous_medecin.'</td>';
+                                                        }
+                                                        echo '</tr>';
+                                                        $i++;
+                                                    }
+                                                } catch (Exception $e) {
+                                                    echo '<tr>';
+                                                    echo '<td>'.$e.'</td>';
+                                                    echo '</tr>';
                                                 }
-                                                echo '</div><div class="info-body">';
-                                                echo '<p> Date: '.$rdv->getDate_Rendez_Vous().'</p>';
-                                                echo '<p> Salle: '.$rdv->getSalle_Rendez_Vous().'</p>';
-                                                if (isset($Medecins[$id_rendezvous_medecin])) {
-                                                    echo '<p> Médecin: '.$Medecins[$id_rendezvous_medecin]->getNom_Medecin().' '.$Medecins[$id_rendezvous_medecin]->getPrenom_Medecin().'</p>';
-                                                } else {
-                                                    echo '<p> Médecin: '.$id_rendezvous_medecin.'</p>';
-                                                }
-                                                echo '</div></div>';
                                             }
-                                        } catch (Exception $e) {
-                                            echo '<div class="info"><div class="info-head">';
-                                            echo '<h5>'.$e.'</h5>';
-                                            echo '</div></div>';
-                                        }
-                                    }
 
-                                    else {
-                                        echo '<div class="info">';
-                                        echo '<div class="info-head">';
-                                        echo '<h5>Aucun rendez-vous à venir</h5>';
-                                        echo '</div>';
-                                        echo '</div>';
-                                    }
-                                ?>
+                                            else {
+                                                echo '<tr>';
+                                                echo '<td>Aucun rendez-vous à venir</td>';
+                                                echo '</tr>';
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 

@@ -1,6 +1,6 @@
-# WebDesign_TP3_CODACCIONI
+# WebDesign_TP3
 
-> Projet Web Design - EPF - 2023 - CODACCIONI Kilian
+> Projet Web Design - EPF - 2023
 
 ## Table des matières
 

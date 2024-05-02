@@ -7,7 +7,6 @@
 - [Présentation](#présentation)
 - [Stockage des données](#stockage-des-données)
 - [Technologies](#technologies)
-- [Installation](#installation)
 - [Utilisation](#utilisation)
 
 ## Présentation
@@ -46,12 +45,6 @@ Ce projet est réalisé avec:
 - CSS
 - Bootstrap
 - SQL
-
-## Installation
-
-Pour installer ce projet, il suffit de le cloner avec la commande suivante:
-
-    git clone https://github.com/suprkco/WebDesign_TP3_CODACCIONI.git
 
 ## Utilisation
 

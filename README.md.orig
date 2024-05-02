@@ -1,6 +1,6 @@
-﻿# WebDesign_TP3_CODACCIONI
+﻿# WebDesign_TP3
 
-> Projet Web Design - EPF - 2023 - CODACCIONI Kilian
+> Projet Web Design - EPF - 2023
 
 ## Table des matières
 
@@ -30,9 +30,3 @@ Ce projet est réalisé avec:
 - CSS
 - Bootstrap
 - SQL
-
-## Installation
-
-Pour installer ce projet, il suffit de le cloner avec la commande suivante:
-
-    git clone https://github.com/suprkco/WebDesign_TP3_CODACCIONI.git
